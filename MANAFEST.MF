@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: tv.twitch.deltabot.core.Init
+Class-Path: lib/jar/pircbot.jar lib/jar/JDA-3.8.0_423-withDependencies.jar
