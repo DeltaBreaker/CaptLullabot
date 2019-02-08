@@ -58,7 +58,7 @@ enum Commands {
 		@Override
 		public void run(String[] command) {
 			for (int i = 0; i < TwitchBot.operators.size(); i++) {
-				if (command[1].equals(TwitchBot.operators.get(i))) {
+				if (command[1].toLowerCase().equals(TwitchBot.operators.get(i))) {
 					TwitchBot.operators.remove(i);
 					i--;
 					System.out.println("[Console]: Demoted: " + command[1]);

@@ -32,6 +32,7 @@ public class TwitchBot extends PircBot {
 	public static String[] pokemonList;
 
 	public ArrayList<Message> chatLog = new ArrayList<Message>();
+	public ArrayList<String> staticChatLog = new ArrayList<String>();
 	public ArrayList<String> voteOptions = new ArrayList<String>();
 	public ArrayList<String> voters = new ArrayList<String>();
 	public ArrayList<String> trainers = new ArrayList<String>();
@@ -49,6 +50,8 @@ public class TwitchBot extends PircBot {
 	public int voteTimer = 0;
 	public int voteTime = 0;
 
+	public static String discordServerLink = "https://discord.gg/PHrkGzp";
+	
 	public TwitchBot(String botName) {
 		this.setName(botName);
 	}
@@ -63,14 +66,14 @@ public class TwitchBot extends PircBot {
 			if (trades.get(i).timer == trades.get(i).time) {
 				trades.remove(i);
 				i--;
-				sendMessage(Init.channel, "The trade expired.");
+				sendMessage(Init.twitchChannel, "The trade expired.");
 			}
 		}
 		if (voting) {
 			if (voteTimer < voteTime) {
 				voteTimer++;
 				if (voteTimer == voteTime - 40) {
-					sendMessage(Init.channel, "10 seconds remaining!");
+					sendMessage(Init.twitchChannel, "10 seconds remaining!");
 				}
 			} else {
 				int winner = 0;
@@ -79,7 +82,7 @@ public class TwitchBot extends PircBot {
 						winner = i;
 					}
 				}
-				sendMessage(Init.channel, "The poll winner is: " + voteOptions.get(winner));
+				sendMessage(Init.twitchChannel, "The poll winner is: " + voteOptions.get(winner));
 				voting = false;
 			}
 		}
@@ -94,19 +97,19 @@ public class TwitchBot extends PircBot {
 					currentPokemon = new Random().nextInt(pokemonList.length);
 					trainers.clear();
 					catchTimer = 0;
-					sendMessage(Init.channel, "Encounter: A wild " + pokemonList[currentPokemon] + " appeared!");
-					sendMessage(Init.channel, "You have one pokeball. Use !throw to give it a shot!");
+					sendMessage(Init.twitchChannel, "Encounter: A wild " + pokemonList[currentPokemon] + " appeared!");
+					sendMessage(Init.twitchChannel, "You have one pokeball. Use !throw to give it a shot!");
 				}
 			} else {
 				if (catchTimer < catchTime) {
 					catchTimer++;
 					if (catchTimer == catchTime - 40) {
-						sendMessage(Init.channel, "10 seconds remaining!");
+						sendMessage(Init.twitchChannel, "10 seconds remaining!");
 					}
 				} else {
 					catchTimer = 0;
 					if (!caught) {
-						sendMessage(Init.channel, "It ran away...");
+						sendMessage(Init.twitchChannel, "It ran away...");
 					}
 					wildAppeared = false;
 				}
@@ -116,8 +119,8 @@ public class TwitchBot extends PircBot {
 			if (notifTimer < notifTime) {
 				notifTimer++;
 			} else {
-				sendMessage(Init.channel,
-						"Want a place to hang out? Join our Twitch server on Discord: https://discord.gg/PHrkGzp");
+				sendMessage(Init.twitchChannel,
+						"Want a place to hang out? Join our Twitch server on Discord: " + discordServerLink);
 				notifTimer = 0;
 			}
 		}
@@ -126,6 +129,7 @@ public class TwitchBot extends PircBot {
 	@Override
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
 		chatLog.add(new Message(sender, message, System.currentTimeMillis()));
+		staticChatLog.add(sender + ": " + message);
 		if (chatLog.size() > logLimit) {
 			chatLog.remove(0);
 		}

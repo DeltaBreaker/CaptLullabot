@@ -17,23 +17,29 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import tv.twitch.deltabot.bots.TwitchBot;
+import tv.twitch.deltabot.ui.AuthGUI;
+import tv.twitch.deltabot.ui.GUI;
 
 public class Init {
 
-	private static final String version = "1.2.1";
+	private static final String version = "1.2.2";
 
 	public static TwitchBot twitchBot;
 	public static JDA discordBot;
+	public static GUI gui;
 	public static boolean isRunning = true;
 
 	public static String botName = "CaptLullabot";
-	public static String channel = "#captlullaby";
-	private static final String twitchAuth = "oauth:vkd8sbruvq4jecl017n6rvmcteh3xj";
-	private static final String discordAuth = "NTM4NjgxMjEzMjAwNzYwODQy.Dy3XXQ.PpnCX9KnPLm91Fj7z5FjPzw5tz4";
-	public static final long discordServerID = 536009433948618782L;
+	public static String twitchChannel;
+	public static String twitchAuth;
+	public static String discordAuth;
+	public static long discordServerID;
+	public static long discordServerChannelID;
 
 	public static void main(String[] args) throws Exception {
-		if (args[0].equals("validate")) {
+		loadAuth();
+
+		if (isRunning) {
 			loadOps();
 			loadSettings();
 			startLogger();
@@ -43,16 +49,25 @@ public class Init {
 			twitchBot = new TwitchBot(botName);
 			twitchBot.setVerbose(true);
 			twitchBot.connect("irc.twitch.tv", 6667, twitchAuth);
-			twitchBot.joinChannel(channel);
+			twitchBot.joinChannel(twitchChannel);
 
 			discordBot = new JDABuilder(AccountType.BOT).setToken(discordAuth).build();
 
-			System.out.println("[Init]: Bot started for channel: " + channel);
-
-			while (isRunning) {
-				twitchBot.tick();
-				Thread.sleep(250L);
+			if (args.length > 0) {
+				if (!args[0].equals("nogui")) {
+					gui = new GUI(twitchBot);
+				}
+			} else {
+				gui = new GUI(twitchBot);
 			}
+
+			System.out.println("[Init]: Bot started for channel: " + twitchChannel);
+		}
+
+		while (isRunning) {
+			twitchBot.tick();
+			gui.repaint();
+			Thread.sleep(250L);
 		}
 	}
 
@@ -73,6 +88,56 @@ public class Init {
 		System.out.println("[Init]: Started chat command system");
 	}
 
+	public static void loadAuth() {
+		File f = new File(System.getenv("APPDATA") + "/DeltaBot/auth.keys");
+		if (f.exists()) {
+			Properties mySettings = new Properties();
+			try {
+				mySettings.load(new FileInputStream(f));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			twitchChannel = mySettings.getProperty("twitch_channel");
+			twitchAuth = mySettings.getProperty("twitch_auth");
+			discordAuth = mySettings.getProperty("discord_auth");
+			discordServerID = Long.parseLong(mySettings.getProperty("discord_server_id"));
+			discordServerID = Long.parseLong(mySettings.getProperty("discord_server_channel_id"));
+
+			System.out.println("[Init]: Auth keys file loaded");
+		} else {
+			System.out.println("[Init]: Auth keys file not found");
+			isRunning = false;
+			new AuthGUI();
+		}
+	}
+
+	public static void createAuth() {
+		File f = new File(System.getenv("APPDATA") + "/DeltaBot");
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+		try {
+			PrintStream out = new PrintStream(new FileOutputStream(f + "/auth.keys"));
+			out.println("/* Auth Keys */");
+			out.println("/* !! Never show these to anyone !! */");
+			out.println("");
+
+			out.println("twitch_channel=" + twitchChannel);
+			out.println("twitch_auth=" + twitchAuth);
+			out.println("discord_auth=" + discordAuth);
+			out.println("discord_server_id=" + discordServerID);
+			out.println("discord_server_channel_id=" + discordServerChannelID);
+
+			out.flush();
+			out.close();
+
+			System.out.println("[Init]: Auth keys file saved");
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+	}
+
 	public static void loadSettings() {
 		File f = new File(System.getenv("APPDATA") + "/DeltaBot/settings.cfg");
 		if (f.exists()) {
@@ -84,6 +149,7 @@ public class Init {
 			}
 
 			if (mySettings.getProperty("version").equals(version)) {
+				TwitchBot.discordServerLink = mySettings.getProperty("discord_server_link");
 				TwitchBot.discordNotif = Boolean.parseBoolean(mySettings.getProperty("discord_notif"));
 				TwitchBot.notifTime = Integer.parseInt(mySettings.getProperty("discord_notif_time"));
 				TwitchBot.timeoutTime = Integer.parseInt(mySettings.getProperty("timeout_time"));
@@ -116,6 +182,7 @@ public class Init {
 			out.println("");
 
 			out.println("version=" + version);
+			out.println("discord_server_link=" + TwitchBot.discordServerLink);
 			out.println("discord_notif=" + TwitchBot.discordNotif);
 			out.println("discord_notif_time=" + TwitchBot.notifTime);
 			out.println("timeout_time=" + TwitchBot.timeoutTime);

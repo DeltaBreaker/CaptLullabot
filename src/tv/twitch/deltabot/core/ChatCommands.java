@@ -17,7 +17,7 @@ public enum ChatCommands {
 		@Override
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
 				String message, boolean operator) throws Exception {
-			bot.sendMessage(channel, "Join our Twitch server on Discord: https://discord.gg/PHrkGzp");
+			bot.sendMessage(channel, "Join our Twitch server on Discord: " + TwitchBot.discordServerLink);
 			System.out.println("[Chat]: Command 'Discord' ran successfully");
 		}
 	},
@@ -253,7 +253,8 @@ public enum ChatCommands {
 			if (operator) {
 				String[] args = message.split(" ");
 				if (bot.points.containsKey(args[2].toLowerCase())) {
-					bot.points.put(args[2].toLowerCase(), Math.max(bot.points.get(args[2].toLowerCase()) - Integer.parseInt(args[1]), 0));
+					bot.points.put(args[2].toLowerCase(),
+							Math.max(bot.points.get(args[2].toLowerCase()) - Integer.parseInt(args[1]), 0));
 					bot.sendMessage(channel, "Removed " + args[1] + " from " + args[2] + "'s balance.");
 				} else {
 					bot.sendMessage(channel, "User has not check in yet!");
@@ -269,7 +270,7 @@ public enum ChatCommands {
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
 				String message, boolean operator) throws Exception {
 			if (operator) {
-				Init.discordBot.getGuildById(Init.discordServerID).getTextChannelById(536043563234885668L)
+				Init.discordBot.getGuildById(Init.discordServerID).getTextChannelById(Init.discordServerChannelID)
 						.sendMessage("@everyone We just went live! https://www.twitch.tv/captlullaby").queue();
 				bot.sendMessage(channel, "Notification sent!");
 			} else {
@@ -608,6 +609,20 @@ public enum ChatCommands {
 						Init.saveOps();
 					}
 				}
+			} else {
+				bot.sendMessage(channel, "You do not have the correct permissions to do that!");
+			}
+		}
+	},
+
+	_setdiscordlink {
+		@Override
+		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
+				String message, boolean operator) throws Exception {
+			String[] args = message.split(" ");
+			if (operator) {
+				TwitchBot.discordServerLink = args[1];
+				bot.sendMessage(channel, "Discord link set: " + args[1]);
 			} else {
 				bot.sendMessage(channel, "You do not have the correct permissions to do that!");
 			}
