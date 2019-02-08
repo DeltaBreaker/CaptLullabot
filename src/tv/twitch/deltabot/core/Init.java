@@ -33,24 +33,26 @@ public class Init {
 	public static final long discordServerID = 536009433948618782L;
 
 	public static void main(String[] args) throws Exception {
-		loadOps();
-		loadSettings();
-		startLogger();
-		startConsole();
-		TwitchBot.pokemonList = loadStringArray("pokemon_names.txt");
+		if (args[0].equals("validate")) {
+			loadOps();
+			loadSettings();
+			startLogger();
+			startConsole();
+			TwitchBot.pokemonList = loadStringArray("pokemon_names.txt");
 
-		twitchBot = new TwitchBot(botName);
-		twitchBot.setVerbose(true);
-		twitchBot.connect("irc.twitch.tv", 6667, twitchAuth);
-		twitchBot.joinChannel(channel);
+			twitchBot = new TwitchBot(botName);
+			twitchBot.setVerbose(true);
+			twitchBot.connect("irc.twitch.tv", 6667, twitchAuth);
+			twitchBot.joinChannel(channel);
 
-		discordBot = new JDABuilder(AccountType.BOT).setToken(discordAuth).build();
-		
-		System.out.println("[Init]: Bot started for channel: " + channel);
+			discordBot = new JDABuilder(AccountType.BOT).setToken(discordAuth).build();
 
-		while (isRunning) {
-			twitchBot.tick();
-			Thread.sleep(250L);
+			System.out.println("[Init]: Bot started for channel: " + channel);
+
+			while (isRunning) {
+				twitchBot.tick();
+				Thread.sleep(250L);
+			}
 		}
 	}
 
