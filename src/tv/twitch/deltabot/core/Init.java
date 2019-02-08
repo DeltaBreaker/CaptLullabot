@@ -66,7 +66,9 @@ public class Init {
 
 		while (isRunning) {
 			twitchBot.tick();
-			gui.repaint();
+			if (gui != null) {
+				gui.repaint();
+			}
 			Thread.sleep(250L);
 		}
 	}

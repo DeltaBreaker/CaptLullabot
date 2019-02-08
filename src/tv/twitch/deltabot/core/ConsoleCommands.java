@@ -38,6 +38,7 @@ enum Commands {
 				Init.twitchBot.dispose();
 				Init.discordBot.shutdownNow();
 				Init.isRunning = false;
+				System.exit(0);
 				System.out.println("[Console]: Shutting down " + Init.botName);
 			} catch (Exception e) {
 				System.exit(0);
