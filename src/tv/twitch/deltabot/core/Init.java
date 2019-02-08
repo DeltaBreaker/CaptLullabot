@@ -27,7 +27,7 @@ public class Init {
 	public static boolean isRunning = true;
 
 	public static String botName = "CaptLullabot";
-	public static String channel = "#deltabreakerxml";
+	public static String channel = "#captlullaby";
 	private static final String twitchAuth = "oauth:vkd8sbruvq4jecl017n6rvmcteh3xj";
 	private static final String discordAuth = "NTM4NjgxMjEzMjAwNzYwODQy.Dy3XXQ.PpnCX9KnPLm91Fj7z5FjPzw5tz4";
 	public static final long discordServerID = 536009433948618782L;

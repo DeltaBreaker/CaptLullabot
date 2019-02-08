@@ -1,0 +1,35 @@
+Version: 1.2.1
+
+Changes:
+
+	- Changed default catch rate for Pokemon to 30%
+	- Added trade functionality for Pokemon
+	- Users can check other Pokemon in other people's PCs
+	
+Added Commands:
+
+	- !catchrate [% chance]
+	Changes the catch rate for wild pokemon
+	
+	- !encounter
+	Starts a wild encounter
+	
+	- !trade [user] [offer PC slot #] [request PC slot #]
+	Requests a trade with a user for selected Pokemon
+	
+	- !accept
+	Accepts current trade request
+	
+	- !decline
+	Declines current trade request
+	
+	- !op [user]
+	Adds a user to the operator list
+	
+	- !deop [user]
+	Removes user from the operator list
+	
+Changed Commands:
+	
+	- !pc [slot] / [user] [slot]
+	Allows a user to check the PC slot of another user

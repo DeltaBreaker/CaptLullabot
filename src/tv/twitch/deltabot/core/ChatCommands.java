@@ -252,8 +252,8 @@ public enum ChatCommands {
 				String message, boolean operator) throws Exception {
 			if (operator) {
 				String[] args = message.split(" ");
-				if (bot.points.containsKey(args[2])) {
-					bot.points.put(args[2], Math.max(bot.points.get(args[2]) - Integer.parseInt(args[1]), 0));
+				if (bot.points.containsKey(args[2].toLowerCase())) {
+					bot.points.put(args[2].toLowerCase(), Math.max(bot.points.get(args[2].toLowerCase()) - Integer.parseInt(args[1]), 0));
 					bot.sendMessage(channel, "Removed " + args[1] + " from " + args[2] + "'s balance.");
 				} else {
 					bot.sendMessage(channel, "User has not check in yet!");
