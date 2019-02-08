@@ -20,14 +20,14 @@ import tv.twitch.deltabot.bots.TwitchBot;
 
 public class Init {
 
-	private static final String version = "1.2.0";
+	private static final String version = "1.2.1";
 
 	public static TwitchBot twitchBot;
 	public static JDA discordBot;
 	public static boolean isRunning = true;
 
 	public static String botName = "CaptLullabot";
-	public static String channel = "deltabreakerxml";
+	public static String channel = "#deltabreakerxml";
 	private static final String twitchAuth = "oauth:vkd8sbruvq4jecl017n6rvmcteh3xj";
 	private static final String discordAuth = "NTM4NjgxMjEzMjAwNzYwODQy.Dy3XXQ.PpnCX9KnPLm91Fj7z5FjPzw5tz4";
 	public static final long discordServerID = 536009433948618782L;
@@ -45,7 +45,7 @@ public class Init {
 		twitchBot.joinChannel(channel);
 
 		discordBot = new JDABuilder(AccountType.BOT).setToken(discordAuth).build();
-
+		
 		System.out.println("[Init]: Bot started for channel: " + channel);
 
 		while (isRunning) {
@@ -82,13 +82,13 @@ public class Init {
 			}
 
 			if (mySettings.getProperty("version").equals(version)) {
-
 				TwitchBot.discordNotif = Boolean.parseBoolean(mySettings.getProperty("discord_notif"));
 				TwitchBot.notifTime = Integer.parseInt(mySettings.getProperty("discord_notif_time"));
 				TwitchBot.timeoutTime = Integer.parseInt(mySettings.getProperty("timeout_time"));
 				TwitchBot.pokeGame = Boolean.parseBoolean(mySettings.getProperty("pokemon_minigame"));
 				TwitchBot.wildTime = Integer.parseInt(mySettings.getProperty("pokemon_wild_time"));
 				TwitchBot.catchTime = Integer.parseInt(mySettings.getProperty("pokemon_catch_time"));
+				TwitchBot.catchRate = Integer.parseInt(mySettings.getProperty("pokemon_catch_rate"));
 
 				System.out.println("[Init]: Settings config file loaded");
 			} else {
@@ -120,6 +120,7 @@ public class Init {
 			out.println("pokemon_minigame=" + TwitchBot.pokeGame);
 			out.println("pokemon_wild_time=" + TwitchBot.wildTime);
 			out.println("pokemon_catch_time=" + TwitchBot.catchTime);
+			out.println("pokemon_catch_rate=" + TwitchBot.catchRate);
 
 			out.flush();
 			out.close();

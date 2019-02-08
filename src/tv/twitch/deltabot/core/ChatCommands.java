@@ -2,11 +2,14 @@ package tv.twitch.deltabot.core;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
 import tv.twitch.deltabot.bots.TwitchBot;
+import tv.twitch.deltabot.objects.Trade;
 
 public enum ChatCommands {
 
@@ -317,6 +320,20 @@ public enum ChatCommands {
 		}
 	},
 
+	_catchrate {
+		@Override
+		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
+				String message, boolean operator) throws Exception {
+			if (operator) {
+				String[] args = message.split(" ");
+				TwitchBot.catchRate = Math.min(100, Math.max(0, Integer.parseInt(args[1])));
+				bot.sendMessage(channel, "Set catch rate to " + args[1] + "%.");
+			} else {
+				bot.sendMessage(channel, "You do not have the correct permissions to do that!");
+			}
+		}
+	},
+
 	_throw {
 		@Override
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
@@ -331,7 +348,7 @@ public enum ChatCommands {
 					}
 					if (!thrown) {
 						bot.trainers.add(sender);
-						if (new Random().nextInt(100) < 50) {
+						if (new Random().nextInt(100) < TwitchBot.catchRate) {
 							bot.sendMessage(channel,
 									sender + " has caught the " + TwitchBot.pokemonList[bot.currentPokemon] + "!");
 							bot.wildAppeared = false;
@@ -356,13 +373,19 @@ public enum ChatCommands {
 		@Override
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
 				String message, boolean operator) throws Exception {
-			File f = new File(System.getenv("APPDATA") + "/DeltaBot/data/users/" + sender + "/pokemon.dat");
+			String[] args = message.split(" ");
+			File f;
+
+			if (args.length == 3) {
+				f = new File(System.getenv("APPDATA") + "/DeltaBot/data/users/" + args[1] + "/pokemon.dat");
+			} else {
+				f = new File(System.getenv("APPDATA") + "/DeltaBot/data/users/" + sender + "/pokemon.dat");
+			}
 			if (f.exists()) {
-				String[] args = message.split(" ");
 				ObjectInputStream in = new ObjectInputStream(new FileInputStream(f));
 				if (args.length == 1) {
 					bot.sendMessage(channel, "You have " + in.readInt() + " Pokemon in the PC!");
-				} else {
+				} else if (args.length == 2) {
 					ArrayList<String> pokemon = new ArrayList<String>();
 					int length = in.readInt();
 					for (int i = 0; i < length; i++) {
@@ -371,6 +394,18 @@ public enum ChatCommands {
 					if (Integer.parseInt(args[1]) - 1 >= 0 && Integer.parseInt(args[1]) - 1 < pokemon.size()) {
 						bot.sendMessage(channel, "You have a " + pokemon.get(Integer.parseInt(args[1]) - 1)
 								+ " in slot " + (Integer.parseInt(args[1])) + ".");
+					} else {
+						bot.sendMessage(channel, "There's nothing there!");
+					}
+				} else if (args.length == 3) {
+					ArrayList<String> pokemon = new ArrayList<String>();
+					int length = in.readInt();
+					for (int i = 0; i < length; i++) {
+						pokemon.add(in.readUTF());
+					}
+					if (Integer.parseInt(args[2]) - 1 >= 0 && Integer.parseInt(args[2]) - 1 < pokemon.size()) {
+						bot.sendMessage(channel, "You have a " + pokemon.get(Integer.parseInt(args[2]) - 1)
+								+ " in slot " + (Integer.parseInt(args[2])) + ".");
 					} else {
 						bot.sendMessage(channel, "There's nothing there!");
 					}
@@ -395,7 +430,155 @@ public enum ChatCommands {
 			}
 		}
 	},
-	
+
+	_trade {
+		@Override
+		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
+				String message, boolean operator) throws Exception {
+			String[] args = message.split(" ");
+			if (!sender.equals(args[1])) {
+				boolean notActive = true;
+				for (Trade t : bot.trades) {
+					if (t.recipient.equals(args[1])) {
+						bot.sendMessage(channel, args[1] + " already has an active trade!");
+						notActive = false;
+						break;
+					}
+				}
+				if (notActive) {
+					File one = new File(System.getenv("APPDATA") + "/DeltaBot/data/users/" + sender + "/pokemon.dat");
+					File two = new File(System.getenv("APPDATA") + "/DeltaBot/data/users/" + args[1] + "/pokemon.dat");
+					if (one.exists()) {
+						if (two.exists()) {
+							ObjectInputStream inOne = new ObjectInputStream(new FileInputStream(one));
+							ObjectInputStream inTwo = new ObjectInputStream(new FileInputStream(two));
+							ArrayList<String> pokemonOne = new ArrayList<String>();
+							ArrayList<String> pokemonTwo = new ArrayList<String>();
+
+							int length = inOne.readInt();
+							for (int i = 0; i < length; i++) {
+								pokemonOne.add(inOne.readUTF());
+							}
+							length = inTwo.readInt();
+							for (int i = 0; i < length; i++) {
+								pokemonTwo.add(inTwo.readUTF());
+							}
+
+							inOne.close();
+							inTwo.close();
+
+							if (Integer.parseInt(args[2]) > pokemonOne.size()
+									|| Integer.parseInt(args[3]) > pokemonTwo.size() || Integer.parseInt(args[2]) == 0
+									|| Integer.parseInt(args[3]) == 0) {
+								bot.sendMessage(channel, "That pokemon doesn't exist!");
+							} else {
+								bot.trades.add(new Trade(sender, args[1], Integer.parseInt(args[2]),
+										Integer.parseInt(args[3])));
+								bot.sendMessage(channel,
+										args[1] + ", " + sender + " wants to trade their "
+												+ pokemonOne.get(Integer.parseInt(args[2])) + " for your "
+												+ pokemonTwo.get(Integer.parseInt(args[3])) + "!");
+								bot.sendMessage(channel, "Use !accept or !decline.");
+							}
+						} else {
+							bot.sendMessage(channel, "That person doesn't have any pokemon!");
+						}
+					} else {
+						bot.sendMessage(channel, "You don't have any pokemon!");
+					}
+				}
+			} else {
+				bot.sendMessage(channel, "You can't trade with yourself!");
+			}
+		}
+	},
+
+	_accept {
+		@Override
+		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
+				String message, boolean operator) throws Exception {
+			boolean hasTrade = false;
+			for (int i = 0; i < bot.trades.size(); i++) {
+				if (bot.trades.get(i).recipient.equals(sender)) {
+					hasTrade = true;
+
+					File one = new File(System.getenv("APPDATA") + "/DeltaBot/data/users/" + bot.trades.get(i).sender
+							+ "/pokemon.dat");
+					File two = new File(System.getenv("APPDATA") + "/DeltaBot/data/users/" + bot.trades.get(i).recipient
+							+ "/pokemon.dat");
+					ObjectInputStream inOne = new ObjectInputStream(new FileInputStream(one));
+					ObjectInputStream inTwo = new ObjectInputStream(new FileInputStream(two));
+					ArrayList<String> pokemonOne = new ArrayList<String>();
+					ArrayList<String> pokemonTwo = new ArrayList<String>();
+
+					int length = inOne.readInt();
+					for (int p = 0; p < length; p++) {
+						pokemonOne.add(inOne.readUTF());
+					}
+					length = inTwo.readInt();
+					for (int p = 0; p < length; p++) {
+						pokemonTwo.add(inTwo.readUTF());
+					}
+
+					inOne.close();
+					inTwo.close();
+
+					String tradeOne = pokemonOne.get(bot.trades.get(i).offer);
+					String tradeTwo = pokemonOne.get(bot.trades.get(i).request);
+
+					pokemonOne.set(bot.trades.get(i).offer, tradeTwo);
+					pokemonTwo.set(bot.trades.get(i).request, tradeOne);
+
+					ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(one));
+
+					out.writeInt(pokemonOne.size());
+					for (String s : pokemonOne) {
+						out.writeUTF(s);
+					}
+
+					out.flush();
+					out.close();
+
+					out = new ObjectOutputStream(new FileOutputStream(two));
+
+					out.writeInt(pokemonTwo.size());
+					for (String s : pokemonTwo) {
+						out.writeUTF(s);
+					}
+
+					out.flush();
+					out.close();
+
+					bot.sendMessage(channel, "Trade successfull!");
+					bot.trades.remove(i);
+					break;
+				}
+			}
+			if (!hasTrade) {
+				bot.sendMessage(channel, "You don't have an active trade!");
+			}
+		}
+	},
+
+	_decline {
+		@Override
+		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
+				String message, boolean operator) throws Exception {
+			boolean hasTrade = false;
+			for (int i = 0; i < bot.trades.size(); i++) {
+				if (bot.trades.get(i).recipient.equals(sender)) {
+					hasTrade = true;
+					bot.sendMessage(channel, "Trade declined!");
+					bot.trades.remove(i);
+					break;
+				}
+			}
+			if (!hasTrade) {
+				bot.sendMessage(channel, "You don't have an active trade!");
+			}
+		}
+	},
+
 	_op {
 		@Override
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
@@ -410,7 +593,7 @@ public enum ChatCommands {
 			}
 		}
 	},
-	
+
 	_deop {
 		@Override
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,

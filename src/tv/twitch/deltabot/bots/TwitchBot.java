@@ -14,8 +14,11 @@ import org.jibble.pircbot.PircBot;
 import tv.twitch.deltabot.core.ChatCommands;
 import tv.twitch.deltabot.core.Init;
 import tv.twitch.deltabot.objects.Message;
+import tv.twitch.deltabot.objects.Trade;
 
 public class TwitchBot extends PircBot {
+
+	public static int catchRate = 30;
 
 	public static int logLimit = 100;
 	public static int notifTime = 7200;
@@ -32,6 +35,7 @@ public class TwitchBot extends PircBot {
 	public ArrayList<String> voteOptions = new ArrayList<String>();
 	public ArrayList<String> voters = new ArrayList<String>();
 	public ArrayList<String> trainers = new ArrayList<String>();
+	public ArrayList<Trade> trades = new ArrayList<Trade>();
 	public TreeMap<String, Integer> points = new TreeMap<String, Integer>();
 	public int[] votes = new int[0];
 
@@ -53,6 +57,14 @@ public class TwitchBot extends PircBot {
 		uptime++;
 		for (String s : points.keySet()) {
 			points.put(s, points.get(s) + 1);
+		}
+		for (int i = 0; i < trades.size(); i++) {
+			trades.get(i).tick();
+			if (trades.get(i).timer == trades.get(i).time) {
+				trades.remove(i);
+				i--;
+				sendMessage(Init.channel, "The trade expired.");
+			}
 		}
 		if (voting) {
 			if (voteTimer < voteTime) {
