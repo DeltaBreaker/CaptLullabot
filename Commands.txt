@@ -1,0 +1,93 @@
+CaptLullabot commands:
+
+	- !discord
+	Displays the link to the discord server
+	
+	- !discordnotif [true/false]
+	Enables/disables the automatic Discord advertisement (default is enabled)
+	
+	- !discordnotiftime [minutes]
+	Changes the interval for when the Discord advertisement is displayed (default is 30 minutes)
+	
+	- !uptime
+	Displays how long the bot has been running
+	
+	- !timeouttime [seconds]
+	Changes how long people are automatically timed out for when caught spamming (default is 3 minutes)
+	
+	- !newpoll
+	Creates a new poll
+	
+	- !addvote [anything]
+	Adds an option to the current poll
+	
+	- !startpoll [seconds]
+	Starts the current poll for the desired duration
+	
+	- !vote [choice]
+	Votes for whatever is chosen (can only be done once per person)
+	
+	- !rock/paper/scissors
+	A simple RPS command
+	
+	- !checkin
+	Adds your account to the list of current viewers so the bot knows youre here
+	
+	- !balance
+	Check how many points you have accumulated
+	
+	- !balanceadd [points] [user]
+	Adds specified number of points to a user
+	
+	- !balancesub [points] [user]
+	Removes specified number of points from a user
+	
+	- !notiflive
+	Send a notification to the Discord server that we just went live
+	
+	- !encounters [true/false]
+	Enables or disables wild encounters
+	
+	- !encountertime [minutes]
+	Changes the interval between wild encounters
+	
+	- !catchtime [seconds]
+	Changes how long you have to catch the current pokemon
+	
+	- !catchrate [% chance]
+	Changes the catch rate for wild pokemon
+	
+	- !throw
+	Attemps to catch the current pokemon
+	
+	- !pc blank / [slot #] / [user] [slot #]
+	Either tells you how many pokemon you have or tells you what pokemon is in the specified slot (for designated user)
+
+	- !encounter
+	Starts a wild encounter
+	
+	- !trade [user] [offer PC slot #] [request PC slot #]
+	Requests a trade with a user for selected Pokemon
+	
+	- !accept
+	Accepts current trade request
+	
+	- !decline
+	Declines current trade request
+	
+	- !op [user]
+	Adds a user to the operator list
+	
+	- !deop [user]
+	Removes user from the operator list
+
+Console commands:
+
+	- stop
+	properly shuts down CaptLullabot
+	
+	- op [Twitch name]
+	Give a user operator status for the bot
+	
+	- deop [Twitch name]
+	Take away operator status for the bot

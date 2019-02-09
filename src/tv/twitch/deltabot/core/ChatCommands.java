@@ -271,7 +271,7 @@ public enum ChatCommands {
 				String message, boolean operator) throws Exception {
 			if (operator) {
 				Init.discordBot.getGuildById(Init.discordServerID).getTextChannelById(Init.discordServerChannelID)
-						.sendMessage("@everyone We just went live! https://www.twitch.tv/captlullaby").queue();
+						.sendMessage("@everyone We just went live! " + TwitchBot.twitchChannelLink).queue();
 				bot.sendMessage(channel, "Notification sent!");
 			} else {
 				bot.sendMessage(channel, "You do not have the correct permissions to do that!");
@@ -623,6 +623,20 @@ public enum ChatCommands {
 			if (operator) {
 				TwitchBot.discordServerLink = args[1];
 				bot.sendMessage(channel, "Discord link set: " + args[1]);
+			} else {
+				bot.sendMessage(channel, "You do not have the correct permissions to do that!");
+			}
+		}
+	},
+	
+	_settwitchlink {
+		@Override
+		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
+				String message, boolean operator) throws Exception {
+			String[] args = message.split(" ");
+			if (operator) {
+				TwitchBot.twitchChannelLink = args[1];
+				bot.sendMessage(channel, "Twitch link set: " + args[1]);
 			} else {
 				bot.sendMessage(channel, "You do not have the correct permissions to do that!");
 			}

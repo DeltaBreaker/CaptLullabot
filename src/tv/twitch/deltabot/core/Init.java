@@ -22,7 +22,7 @@ import tv.twitch.deltabot.ui.GUI;
 
 public class Init {
 
-	private static final String version = "1.2.2";
+	private static final String version = "1.2.3";
 
 	public static TwitchBot twitchBot;
 	public static JDA discordBot;
@@ -151,6 +151,7 @@ public class Init {
 			}
 
 			if (mySettings.getProperty("version").equals(version)) {
+				TwitchBot.twitchChannelLink = mySettings.getProperty("twitch_channel_link");
 				TwitchBot.discordServerLink = mySettings.getProperty("discord_server_link");
 				TwitchBot.discordNotif = Boolean.parseBoolean(mySettings.getProperty("discord_notif"));
 				TwitchBot.notifTime = Integer.parseInt(mySettings.getProperty("discord_notif_time"));
@@ -184,6 +185,7 @@ public class Init {
 			out.println("");
 
 			out.println("version=" + version);
+			out.println("twitch_channel_link=" + TwitchBot.twitchChannelLink);
 			out.println("discord_server_link=" + TwitchBot.discordServerLink);
 			out.println("discord_notif=" + TwitchBot.discordNotif);
 			out.println("discord_notif_time=" + TwitchBot.notifTime);

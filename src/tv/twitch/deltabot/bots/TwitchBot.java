@@ -51,6 +51,7 @@ public class TwitchBot extends PircBot {
 	public int voteTime = 0;
 
 	public static String discordServerLink = "https://discord.gg/PHrkGzp";
+	public static String twitchChannelLink = "https://www.twitch.tv/captlullaby";
 	
 	public TwitchBot(String botName) {
 		this.setName(botName);
