@@ -418,20 +418,6 @@ public enum ChatCommands {
 		}
 	},
 
-	_encounter {
-		@Override
-		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
-				String message, boolean operator) throws Exception {
-			if (operator) {
-				if (!bot.wildAppeared) {
-					bot.wildTimer = TwitchBot.wildTime;
-				}
-			} else {
-				bot.sendMessage(channel, "You do not have the correct permissions to do that!");
-			}
-		}
-	},
-
 	_trade {
 		@Override
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
@@ -473,12 +459,12 @@ public enum ChatCommands {
 									|| Integer.parseInt(args[3]) == 0) {
 								bot.sendMessage(channel, "That pokemon doesn't exist!");
 							} else {
-								bot.trades.add(new Trade(sender, args[1], Integer.parseInt(args[2]),
-										Integer.parseInt(args[3])));
+								bot.trades.add(new Trade(sender, args[1], Integer.parseInt(args[2]) - 1,
+										Integer.parseInt(args[3]) - 1));
 								bot.sendMessage(channel,
 										args[1] + ", " + sender + " wants to trade their "
-												+ pokemonOne.get(Integer.parseInt(args[2])) + " for your "
-												+ pokemonTwo.get(Integer.parseInt(args[3])) + "!");
+												+ pokemonOne.get(Integer.parseInt(args[2]) - 1) + " for your "
+												+ pokemonTwo.get(Integer.parseInt(args[3]) - 1) + "!");
 								bot.sendMessage(channel, "Use !accept or !decline.");
 							}
 						} else {
@@ -498,6 +484,7 @@ public enum ChatCommands {
 		@Override
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
 				String message, boolean operator) throws Exception {
+			sender = "ph0toncannon";
 			boolean hasTrade = false;
 			for (int i = 0; i < bot.trades.size(); i++) {
 				if (bot.trades.get(i).recipient.equals(sender)) {
@@ -525,7 +512,7 @@ public enum ChatCommands {
 					inTwo.close();
 
 					String tradeOne = pokemonOne.get(bot.trades.get(i).offer);
-					String tradeTwo = pokemonOne.get(bot.trades.get(i).request);
+					String tradeTwo = pokemonTwo.get(bot.trades.get(i).request);
 
 					pokemonOne.set(bot.trades.get(i).offer, tradeTwo);
 					pokemonTwo.set(bot.trades.get(i).request, tradeOne);
@@ -640,6 +627,36 @@ public enum ChatCommands {
 			} else {
 				bot.sendMessage(channel, "You do not have the correct permissions to do that!");
 			}
+		}
+	},
+	
+	_specs {
+		@Override
+		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
+				String message, boolean operator) throws Exception {
+			bot.sendMessage(channel, "You can view his PC specs here! " + TwitchBot.specLink);
+		}
+	},
+	
+	_setspecs {
+		@Override
+		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
+				String message, boolean operator) throws Exception {
+			String[] args = message.split(" ");
+			if (operator) {
+				TwitchBot.specLink = args[1];
+				bot.sendMessage(channel, "Specs link set: " + args[1]);
+			} else {
+				bot.sendMessage(channel, "You do not have the correct permissions to do that!");
+			}
+		}
+	},
+	
+	_help {
+		@Override
+		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
+				String message, boolean operator) throws Exception {
+			bot.sendMessage(channel, "You can view the command list here! " + TwitchBot.commandLink);
 		}
 	};
 

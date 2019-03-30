@@ -19,7 +19,6 @@ import tv.twitch.deltabot.objects.Trade;
 public class TwitchBot extends PircBot {
 
 	public static int catchRate = 30;
-
 	public static int logLimit = 100;
 	public static int notifTime = 7200;
 	public static int wildTime = 10800;
@@ -52,6 +51,8 @@ public class TwitchBot extends PircBot {
 
 	public static String discordServerLink = "https://discord.gg/PHrkGzp";
 	public static String twitchChannelLink = "https://www.twitch.tv/captlullaby";
+	public static String specLink = "https://pcpartpicker.com/list/wmJGCb";
+	public static String commandLink = "";
 	
 	public TwitchBot(String botName) {
 		this.setName(botName);

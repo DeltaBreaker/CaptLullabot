@@ -22,7 +22,7 @@ import tv.twitch.deltabot.ui.GUI;
 
 public class Init {
 
-	private static final String version = "1.2.3";
+	private static final String version = "1.2.4";
 
 	public static TwitchBot twitchBot;
 	public static JDA discordBot;
@@ -104,7 +104,7 @@ public class Init {
 			twitchAuth = mySettings.getProperty("twitch_auth");
 			discordAuth = mySettings.getProperty("discord_auth");
 			discordServerID = Long.parseLong(mySettings.getProperty("discord_server_id"));
-			discordServerID = Long.parseLong(mySettings.getProperty("discord_server_channel_id"));
+			discordServerChannelID = Long.parseLong(mySettings.getProperty("discord_server_channel_id"));
 
 			System.out.println("[Init]: Auth keys file loaded");
 		} else {
@@ -160,6 +160,7 @@ public class Init {
 				TwitchBot.wildTime = Integer.parseInt(mySettings.getProperty("pokemon_wild_time"));
 				TwitchBot.catchTime = Integer.parseInt(mySettings.getProperty("pokemon_catch_time"));
 				TwitchBot.catchRate = Integer.parseInt(mySettings.getProperty("pokemon_catch_rate"));
+				TwitchBot.specLink = mySettings.getProperty("specs_link");
 
 				System.out.println("[Init]: Settings config file loaded");
 			} else {
@@ -194,6 +195,7 @@ public class Init {
 			out.println("pokemon_wild_time=" + TwitchBot.wildTime);
 			out.println("pokemon_catch_time=" + TwitchBot.catchTime);
 			out.println("pokemon_catch_rate=" + TwitchBot.catchRate);
+			out.println("specs_link=" + TwitchBot.specLink);
 
 			out.flush();
 			out.close();

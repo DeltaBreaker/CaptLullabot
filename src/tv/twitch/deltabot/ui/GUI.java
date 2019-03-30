@@ -29,7 +29,7 @@ public class GUI extends JFrame {
 		setSize(335, 120);
 		setResizable(false);
 		setLayout(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setLocationRelativeTo(null);
 
 		op = new JButton("Op");

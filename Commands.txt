@@ -3,25 +3,25 @@ CaptLullabot commands:
 	- !discord
 	Displays the link to the discord server
 	
-	- !discordnotif [true/false]
+	- !discordnotif [true/false] (admin)
 	Enables/disables the automatic Discord advertisement (default is enabled)
 	
-	- !discordnotiftime [minutes]
+	- !discordnotiftime [minutes] (admin)
 	Changes the interval for when the Discord advertisement is displayed (default is 30 minutes)
 	
 	- !uptime
 	Displays how long the bot has been running
 	
-	- !timeouttime [seconds]
+	- !timeouttime [seconds] (admin)
 	Changes how long people are automatically timed out for when caught spamming (default is 3 minutes)
 	
-	- !newpoll
+	- !newpoll (admin)
 	Creates a new poll
 	
-	- !addvote [anything]
+	- !addvote [anything] (admin)
 	Adds an option to the current poll
 	
-	- !startpoll [seconds]
+	- !startpoll [seconds] (admin)
 	Starts the current poll for the desired duration
 	
 	- !vote [choice]
@@ -36,25 +36,25 @@ CaptLullabot commands:
 	- !balance
 	Check how many points you have accumulated
 	
-	- !balanceadd [points] [user]
+	- !balanceadd [points] [user] (admin)
 	Adds specified number of points to a user
 	
-	- !balancesub [points] [user]
+	- !balancesub [points] [user] (admin)
 	Removes specified number of points from a user
 	
-	- !notiflive
+	- !notiflive (admin)
 	Send a notification to the Discord server that we just went live
 	
-	- !encounters [true/false]
+	- !encounters [true/false] (admin)
 	Enables or disables wild encounters
 	
-	- !encountertime [minutes]
+	- !encountertime [minutes] (admin)
 	Changes the interval between wild encounters
 	
-	- !catchtime [seconds]
+	- !catchtime [seconds] (admin)
 	Changes how long you have to catch the current pokemon
 	
-	- !catchrate [% chance]
+	- !catchrate [% chance] (admin)
 	Changes the catch rate for wild pokemon
 	
 	- !throw
@@ -62,9 +62,6 @@ CaptLullabot commands:
 	
 	- !pc blank / [slot #] / [user] [slot #]
 	Either tells you how many pokemon you have or tells you what pokemon is in the specified slot (for designated user)
-
-	- !encounter
-	Starts a wild encounter
 	
 	- !trade [user] [offer PC slot #] [request PC slot #]
 	Requests a trade with a user for selected Pokemon
@@ -75,19 +72,19 @@ CaptLullabot commands:
 	- !decline
 	Declines current trade request
 	
-	- !op [user]
+	- !op [user] (admin)
 	Adds a user to the operator list
 	
-	- !deop [user]
+	- !deop [user] (admin)
 	Removes user from the operator list
-
-Console commands:
-
-	- stop
-	properly shuts down CaptLullabot
 	
-	- op [Twitch name]
-	Give a user operator status for the bot
+	- !specs
+	Links to the Capt's PC specs
 	
-	- deop [Twitch name]
-	Take away operator status for the bot
+	- !setspecs (admin)
+	Sets the link for !specs
+	
+	- !help
+	Links to the bot commands
+	
+	
