@@ -26,6 +26,7 @@ public class GUI extends JFrame {
 	public GUI(TwitchBot bot) {
 		this.bot = bot;
 
+		setTitle(Init.twitchChannel);
 		setSize(335, 120);
 		setResizable(false);
 		setLayout(null);

@@ -18,7 +18,7 @@ import tv.twitch.deltabot.objects.Trade;
 
 public class TwitchBot extends PircBot {
 
-	public static int catchRate = 30;
+	public static int catchRate = 50;
 	public static int logLimit = 100;
 	public static int notifTime = 7200;
 	public static int wildTime = 10800;

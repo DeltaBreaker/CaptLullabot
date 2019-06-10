@@ -22,7 +22,7 @@ import tv.twitch.deltabot.ui.GUI;
 
 public class Init {
 
-	private static final String version = "1.2.4";
+	private static final String version = "1.2.5";
 
 	public static TwitchBot twitchBot;
 	public static JDA discordBot;
@@ -150,7 +150,7 @@ public class Init {
 				e.printStackTrace();
 			}
 
-			if (mySettings.getProperty("version").equals(version)) {
+			try {
 				TwitchBot.twitchChannelLink = mySettings.getProperty("twitch_channel_link");
 				TwitchBot.discordServerLink = mySettings.getProperty("discord_server_link");
 				TwitchBot.discordNotif = Boolean.parseBoolean(mySettings.getProperty("discord_notif"));
@@ -161,7 +161,11 @@ public class Init {
 				TwitchBot.catchTime = Integer.parseInt(mySettings.getProperty("pokemon_catch_time"));
 				TwitchBot.catchRate = Integer.parseInt(mySettings.getProperty("pokemon_catch_rate"));
 				TwitchBot.specLink = mySettings.getProperty("specs_link");
+			} catch (Exception e) {
+				System.out.println("[Init]: Error when loading settings, most likely due to conversion");
+			}
 
+			if (mySettings.getProperty("version").equals(version)) {
 				System.out.println("[Init]: Settings config file loaded");
 			} else {
 				System.out.println("[Init]: Version does not match");
