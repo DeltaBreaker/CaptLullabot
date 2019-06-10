@@ -60,7 +60,7 @@ CaptLullabot commands:
 	- !throw
 	Attemps to catch the current pokemon
 	
-	- !pc blank / [slot #] / [user] [slot #]
+	- !pc blank / [user]
 	Either tells you how many pokemon you have or tells you what pokemon is in the specified slot (for designated user)
 	
 	- !trade [user] [offer PC slot #] [request PC slot #]

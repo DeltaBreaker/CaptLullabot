@@ -57,7 +57,7 @@ public class TwitchBot extends PircBot {
 	public TwitchBot(String botName) {
 		this.setName(botName);
 	}
-
+	
 	public void tick() {
 		uptime++;
 		for (String s : points.keySet()) {
@@ -127,7 +127,7 @@ public class TwitchBot extends PircBot {
 			}
 		}
 	}
-
+	
 	@Override
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
 		chatLog.add(new Message(sender, message, System.currentTimeMillis()));

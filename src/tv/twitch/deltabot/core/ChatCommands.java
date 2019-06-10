@@ -352,8 +352,6 @@ public enum ChatCommands {
 						if (new Random().nextInt(100) < TwitchBot.catchRate) {
 							bot.sendMessage(channel,
 									sender + " has caught the " + TwitchBot.pokemonList[bot.currentPokemon] + "!");
-							bot.wildAppeared = false;
-							bot.caught = true;
 							Init.savePokemon(sender, TwitchBot.pokemonList[bot.currentPokemon]);
 						} else {
 							bot.sendMessage(channel, "It broke free!");
@@ -376,44 +374,37 @@ public enum ChatCommands {
 				String message, boolean operator) throws Exception {
 			String[] args = message.split(" ");
 			File f;
-
-			if (args.length == 3) {
+			String user = "";
+			if (args.length == 2) {
 				f = new File(System.getenv("APPDATA") + "/DeltaBot/data/users/" + args[1] + "/pokemon.dat");
+				user = args[1];
 			} else {
 				f = new File(System.getenv("APPDATA") + "/DeltaBot/data/users/" + sender + "/pokemon.dat");
+				user = sender;
 			}
 			if (f.exists()) {
 				ObjectInputStream in = new ObjectInputStream(new FileInputStream(f));
-				if (args.length == 1) {
-					bot.sendMessage(channel, "You have " + in.readInt() + " Pokemon in the PC!");
-				} else if (args.length == 2) {
-					ArrayList<String> pokemon = new ArrayList<String>();
-					int length = in.readInt();
-					for (int i = 0; i < length; i++) {
-						pokemon.add(in.readUTF());
-					}
-					if (Integer.parseInt(args[1]) - 1 >= 0 && Integer.parseInt(args[1]) - 1 < pokemon.size()) {
-						bot.sendMessage(channel, "You have a " + pokemon.get(Integer.parseInt(args[1]) - 1)
-								+ " in slot " + (Integer.parseInt(args[1])) + ".");
-					} else {
-						bot.sendMessage(channel, "There's nothing there!");
-					}
-				} else if (args.length == 3) {
-					ArrayList<String> pokemon = new ArrayList<String>();
-					int length = in.readInt();
-					for (int i = 0; i < length; i++) {
-						pokemon.add(in.readUTF());
-					}
-					if (Integer.parseInt(args[2]) - 1 >= 0 && Integer.parseInt(args[2]) - 1 < pokemon.size()) {
-						bot.sendMessage(channel, "You have a " + pokemon.get(Integer.parseInt(args[2]) - 1)
-								+ " in slot " + (Integer.parseInt(args[2])) + ".");
-					} else {
-						bot.sendMessage(channel, "There's nothing there!");
-					}
+
+				ArrayList<String> pokemon = new ArrayList<>();
+				int length = in.readInt();
+				for (int i = 0; i < length; i++) {
+					pokemon.add(in.readUTF());
 				}
+
+				String list = "Pokemon in the PC for " + user + ": ";
+				for (int i = 0; i < pokemon.size(); i++) {
+					list += (i + 1) + ": " + pokemon.get(i) + " ";
+				}
+
+				bot.sendMessage(channel, "/w " + sender + " " + list);
+				
 				in.close();
 			} else {
-				bot.sendMessage(channel, "You don't have any Pokemon!");
+				if (args.length == 2) {
+					bot.sendMessage(channel, "That user doesn't have any Pokemon!");
+				} else {
+					bot.sendMessage(channel, "You don't have any Pokemon!");
+				}
 			}
 		}
 	},
@@ -615,7 +606,7 @@ public enum ChatCommands {
 			}
 		}
 	},
-	
+
 	_settwitchlink {
 		@Override
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
@@ -629,7 +620,7 @@ public enum ChatCommands {
 			}
 		}
 	},
-	
+
 	_specs {
 		@Override
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
@@ -637,7 +628,7 @@ public enum ChatCommands {
 			bot.sendMessage(channel, "You can view his PC specs here! " + TwitchBot.specLink);
 		}
 	},
-	
+
 	_setspecs {
 		@Override
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
@@ -651,7 +642,7 @@ public enum ChatCommands {
 			}
 		}
 	},
-	
+
 	_help {
 		@Override
 		public void getCommand(TwitchBot bot, String channel, String sender, String login, String hostname,
