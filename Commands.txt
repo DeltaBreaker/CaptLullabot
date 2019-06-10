@@ -84,6 +84,12 @@ CaptLullabot commands:
 	- !setspecs (admin)
 	Sets the link for !specs
 	
+	- setdiscordlink [link] (admin)
+	Sets the link for !discord and the automated message
+	
+	- settwitchlink [link] (admin)
+	Sets the link for !notiflive
+	
 	- !help
 	Links to the bot commands
 	
