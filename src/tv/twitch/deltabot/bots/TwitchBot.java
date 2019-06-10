@@ -178,6 +178,7 @@ public class TwitchBot extends PircBot {
 						d--;
 					}
 				}
+				
 				break;
 			}
 		}

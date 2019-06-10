@@ -549,6 +549,7 @@ public enum ChatCommands {
 					hasTrade = true;
 					bot.sendMessage(channel, "Trade declined!");
 					bot.trades.remove(i);
+					
 					break;
 				}
 			}
